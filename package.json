@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
-    "start": "ts-node index.ts --project ./tsconfig.json"
+    "start": "ts-node index.ts --project ./tsconfig.json",
+    "array": "ts-node ./data-structures/array --project ./tsconfig.json"
   },
   "devDependencies": {
     "ts-node": "^10.7.0",
