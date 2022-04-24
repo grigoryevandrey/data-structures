@@ -15,7 +15,7 @@ class MyArray<T> {
     if (this.count === this.contents.length) {
       const oldArr = [...this.contents];
 
-      this.contents = new Array(this.count * 1);
+      this.contents = new Array(this.count * 1 || 1);
 
       for (let i = 0; i < oldArr.length; i++) this.contents[i] = oldArr[i];
     }
@@ -47,28 +47,9 @@ class MyArray<T> {
     for (let i = 0; i < this.count; i++) {
       process.stdout.write((this.contents[i] as unknown) + ' ');
     }
+    process.stdout.write('\n');
   }
 }
-
-const array = new MyArray<number>(3);
-
-array.insert(10);
-array.insert(20);
-array.insert(30);
-
-array.print();
-
-console.log('\n');
-
-console.log(`Index of 30: ${array.indexOf(30)}`);
-console.log(`Removed item at 1st index: ${array.removeAt(1)}`);
-console.log(`Index of 30: ${array.indexOf(30)}`);
-
-console.log('');
-
-array.print();
-
-console.log('');
 
 class NumberArray extends MyArray<number> {
   public max(): number {
@@ -82,5 +63,48 @@ class NumberArray extends MyArray<number> {
     return max;
   }
 
-  public reverse(): number[] {}
+  public intersect(arr: number[]): number[] {
+    const intersection = [];
+
+    for (let i = 0; i < this.count; i++) {
+      if (arr.includes(this.contents[i])) {
+        intersection.push(this.contents[i]);
+      }
+    }
+
+    return intersection;
+  }
+
+  public reverse(): void {
+    const reversed = [];
+
+    for (let i = this.count - 1; i >= 0; i--) {
+      reversed.push(this.contents[i]);
+    }
+
+    this.contents = reversed;
+  }
 }
+
+const myNumberArr = new NumberArray(4);
+
+myNumberArr.insert(10);
+myNumberArr.insert(20);
+myNumberArr.insert(30);
+myNumberArr.insert(40);
+
+myNumberArr.print();
+
+myNumberArr.reverse();
+
+myNumberArr.print();
+
+console.log(`Intersection:`, myNumberArr.intersect([10, 20, 50, 70]));
+
+console.log(`Max: ${myNumberArr.max()}`);
+
+myNumberArr.reverse();
+myNumberArr.removeAt(3);
+
+myNumberArr.print();
+console.log(`Max: ${myNumberArr.max()}`);
