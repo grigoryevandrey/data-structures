@@ -1,8 +1,8 @@
 // Lets imagine if arrays in JS were static
 
 class MyArray<T> {
-  private contents: T[];
-  private count: number = 0;
+  protected contents: T[];
+  protected count: number = 0;
 
   constructor(size: number) {
     if (size < 0 || size !== Math.floor(size))
@@ -15,35 +15,25 @@ class MyArray<T> {
     if (this.count === this.contents.length) {
       const oldArr = [...this.contents];
 
-      this.contents = new Array(this.count + 1);
+      this.contents = new Array(this.count * 1);
 
       for (let i = 0; i < oldArr.length; i++) this.contents[i] = oldArr[i];
     }
 
-    this.contents[this.count] = item;
-    this.count++;
+    this.contents[this.count++] = item;
   }
 
   public removeAt(index: number): T {
     if (this.count <= index || index < 0 || Math.floor(index) !== index)
       throw new RangeError('Invalid index');
 
-    const oldArr = [...this.contents];
-    this.contents = new Array(this.count - 1);
+    const removed = this.contents[index];
 
-    for (let i = 0; i < oldArr.length; i++) {
-      if (i === index) continue;
-
-      if (i < index) {
-        this.contents[i] = oldArr[i];
-        continue;
-      }
-
-      this.contents[i - 1] = oldArr[i];
-    }
+    for (let i = index; i < this.count; i++)
+      this.contents[i] = this.contents[i + 1];
 
     this.count--;
-    return oldArr[index];
+    return removed;
   }
 
   public indexOf(item: T): number {
@@ -55,7 +45,7 @@ class MyArray<T> {
 
   public print(): void {
     for (let i = 0; i < this.count; i++) {
-      console.log(this.contents[i]);
+      process.stdout.write((this.contents[i] as unknown) + ' ');
     }
   }
 }
@@ -68,12 +58,29 @@ array.insert(30);
 
 array.print();
 
-console.log('');
+console.log('\n');
 
-console.log(array.indexOf(30));
-console.log(array.removeAt(1));
-console.log(array.indexOf(30));
+console.log(`Index of 30: ${array.indexOf(30)}`);
+console.log(`Removed item at 1st index: ${array.removeAt(1)}`);
+console.log(`Index of 30: ${array.indexOf(30)}`);
 
 console.log('');
 
 array.print();
+
+console.log('');
+
+class NumberArray extends MyArray<number> {
+  public max(): number {
+    if (this.count === 0) throw new Error('Array does not have any elements');
+
+    let max = this.contents[0];
+
+    for (let i = 0; i < this.count; i++)
+      max = this.contents[i] > max ? this.contents[i] : max;
+
+    return max;
+  }
+
+  public reverse(): number[] {}
+}
